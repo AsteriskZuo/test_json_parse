@@ -7,7 +7,7 @@
 //
 
 #include "test_json.hpp"
-#include "json.h"
+#include "json/json.h"
 #include <iostream>
 #include <string>
 
@@ -46,7 +46,9 @@ static void test1()
      */
     // write json format
     Json::CharReaderBuilder builder;
-    Json::CharReader* reader = builder.newCharReader();
+//    Json::CharReader* reader = builder.newCharReader(); // need delete reader
+//    Json::parseFromStream(Json::CharReaderBuilder(), <#std::istream &#>, <#Value *root#>, <#std::string *errs#>)
+    std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
     Json::Value root;
     std::string errs;
     const char* json_data = "{\"version\":\"0.2.0\",\"configurations\":[{\"name\":\"Flutter: Attach to Device\",\"type\":\"dart\",\"request\":\"attach\",\"program\":\"dart/example/lib/main.dart\"},{\"name\":\"Dart\",\"program\":\"bin/main.dart\",\"request\":\"launch\",\"type\":\"dart\"}]}";
@@ -55,6 +57,7 @@ static void test1()
         std::cout << "error:" << errs.c_str() << std::endl;
     }
     parse(root);
+//    delete reader;
 }
 static void parse(const Json::Value& node)
 {
